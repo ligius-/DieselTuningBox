@@ -22,4 +22,6 @@ Terminal commands:
 - S - saves the config to EEPROM
 - L - loads the config from EEPROM, overwriting the current one
 
-By default the module starts disabled, outputing the unmodified ADC input. See blog post for details, the input and output impedance still need some work as the car expect very specific values.
+By default the module starts disabled, outputing the unmodified ADC input. See blog post for details, the input and output impedance still need some work as the car expects very specific values.
+
+The .ods file in this repository is the spreadsheet used for visualising and generating the configuration command.
