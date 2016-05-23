@@ -11,11 +11,11 @@
 
 struct SettingsStorage {
   char version[4];
-  int minRange, maxRange;
+  uint16_t minRange, maxRange;
   byte curve[CURVE_POINTS];
 } settings {
   CONFIG_VERSION,
-  4096, 4096,
+  1024, 1024,
   {100, 100, 100, 100, 100, 100, 100, 100, 100, 100}
 };
 
@@ -31,7 +31,7 @@ boolean loadConfig() {
       EEPROM.read(CONFIG_START + 2) == CONFIG_VERSION[2])
   { // reads settings from EEPROM
     for (unsigned int t = 0; t < sizeof(settings); t++)
-      *((char*)&settings + t) = EEPROM.read(CONFIG_START + t);
+      *((byte*)&settings + t) = EEPROM.read(CONFIG_START + t);
     return true;
   } else {
     // settings aren't valid! will overwrite with default settings
@@ -41,17 +41,27 @@ boolean loadConfig() {
 }
 
 boolean saveConfig() {
+  boolean result = true;
   for (unsigned int t = 0; t < sizeof(settings); t++)
   { // writes to EEPROM
-    EEPROM.update(CONFIG_START + t, *((char*)&settings + t));
+    EEPROM.update(CONFIG_START + t, *((byte*)&settings + t));
     // and verifies the data
-    if (EEPROM.read(CONFIG_START + t) != *((char*)&settings + t))
-    {
+  }
+
+  // display saved and current config
+  for (unsigned int t = 0; t < sizeof(settings); t++) {
+    Serial.print(t);
+    Serial.print('\t');
+    Serial.print(EEPROM.read(CONFIG_START + t), DEC);
+    Serial.print('\t');
+    Serial.println(*((byte*)&settings + t), DEC);
+    if ((EEPROM.read(CONFIG_START + t) != *((byte*)&settings + t))) {
       // error writing to EEPROM
-      return false;
+      result = false;
     }
   }
-  return true;
+
+  return result;
 }
 
 void outputSettings() {
@@ -76,6 +86,11 @@ void readTelemetry() {
   if (Serial.available()) {
     char cmd = (char)Serial.read();
     switch (cmd) {
+      case 'h':
+        Serial.println("e:enable | d:disable | rm:show min | rM:show max | rc:show all");
+        Serial.println("sm[XXX]:set min | sM[XXX]:set max | sC[X][XXX]:set curve point");
+        Serial.println("sX[...]:set all |S:save to eeprom | L:load from eeprom | h:help");
+        break;
       case 'e':
         moduleEnabled = true;
         Serial.println("OK");
@@ -125,11 +140,11 @@ void readTelemetry() {
             settings.minRange = Serial.parseInt();
             Serial.read();//M
             settings.maxRange = Serial.parseInt();
-            for (char i=0; i<CURVE_POINTS; i++){
+            for (char i = 0; i < CURVE_POINTS; i++) {
               settings.curve[i] = Serial.parseInt();
             }
             Serial.println("OK");
-          break;
+            break;
           default:
             Serial.println("??");
         }
@@ -176,7 +191,7 @@ int applyOffset(int inputValue) {
 }
 
 void applyOffset() {
-  if (moduleEnabled){
+  if (moduleEnabled) {
     digitalWrite(LED, 1);
   }
   lastReadValue = analogRead(ADC_IN);
