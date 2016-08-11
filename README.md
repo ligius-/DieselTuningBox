@@ -14,7 +14,7 @@ The module intercepts the high pressure rail sensor signal (0 to 5V) and modifie
 The Arduino (Nano, Pro Mini, anything ATMega328-based) is connected via the TX and RX lines to a HC-05 module.
 The bypass relay is controlled an ATMega output pin (7). When the relay is off, the signal from the sensor will pass unaltered to the ECU. When the relay is switched on, the signal passes through to the ADC input (A0), the ATMega computes a PWM value which is then sent to the output pin (9), low-pass-filtered, measured again (A1) and sent to the ECU.
 
-![version 2 schematyic](https://github.com/ligius-/DieselTuningBox/raw/master/db2%20schematic.PNG)
+![version 2 schematic](https://github.com/ligius-/DieselTuningBox/raw/master/db2%20schematic.PNG)
 
 # Calculations
 
