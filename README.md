@@ -75,3 +75,10 @@ The low priority task runs every second and provides a status update, reads seri
 
 # Other resources
 The .ods file in this repository is the spreadsheet used for visualising and generating the configuration command.
+
+# Update Jan 2018
+This project has been both active and lingering. The good news is that it has kept running without issues for more than a year. The bad news is that consumption improvements fall within measurement error. You can still use it to "boost" your low-end torque or to minimise engine vibrations at certain RPMs.
+
+The on-board computer will show a significantly lower consumption than the previous one, but the real consumption will be almost the same. In my case, getting a 6.5-7.2 litres/100 km displayed, with an actual value of 8-9. The OBC seems to adjust itself temporarily if you run a full tank to empty, but reverts itself to the "optimistic" display after a while.
+
+Still taking (slow) measurements to see if this hack does indeed change the fuel usage.
